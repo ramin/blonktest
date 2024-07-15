@@ -9,7 +9,12 @@ runcmd:
   - mount /dev/vdb /mnt/data
   - apt-get update
   - apt-get install -y wget
+  - export HOME=/root
   - mkdir -p /mnt/data/celestia/celestia-node
   - wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz
   - tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data/celestia/celestia-node
-  - /mnt/data/celestia/celestia-node/celestia bridge init --node-store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
+  - export CELESTIA_CUSTOM=${celestia_custom}
+  # - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
+  # - tmux new-session -d -s bridge 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge start --node.store /mnt/data/celestia-bridge'
+  - /mnt/data/celestia/celestia-node/celestia light init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
+  - tmux new-session -d -s bridge '/mnt/data/celestia/celestia-node/celestia light start --node.store /mnt/data/celestia-bridge'
