@@ -25,3 +25,14 @@ variable "volume_size" {
   default     = 8000
   description = "the size of the bridge's volume in GB"
 }
+
+variable "celestia_network" {
+  type        = string
+  default     = "mocha"
+  description = "the celestia p2p.network to connect to"
+}
+
+variable "core_ip" {
+  type        = string
+  description = "the celestia p2p.network to connect to"
+}
