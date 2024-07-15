@@ -1,0 +1,15 @@
+#cloud-config
+package_update: true
+packages:
+  - golang
+  - git
+runcmd:
+  - mkfs.ext4 /dev/vdb
+  - mkdir -p /mnt/data
+  - mount /dev/vdb /mnt/data
+  - apt-get update
+  - apt-get install -y wget
+  - mkdir -p /mnt/data/celestia/celestia-node
+  - wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz
+  - tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data/celestia/celestia-node
+  - /mnt/data/celestia/celestia-node/celestia bridge init --node-store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
