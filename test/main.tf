@@ -41,7 +41,7 @@ resource "scaleway_instance_server" "servers" {
 
   user_data = {
 
-    cloud-init = templatefile("${path.module}/cloud-init.yml", {
+    cloud-init = templatefile("${path.module}/../templates/cloud-init/bridge.yml", {
       celestia_custom  = var.celestia_network
       core_ip          = var.core_ip
       metrics_endpoint = var.metrics_endpoint

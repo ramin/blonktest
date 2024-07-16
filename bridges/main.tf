@@ -27,7 +27,7 @@ resource "scaleway_instance_server" "servers" {
     scaleway_instance_security_group.bridges
   ]
 
-  name  = "blonks-test-${count.index}"
+  name  = "blonks-test-bridge-${count.index}"
   type  = "PRO2-M"
   image = "ubuntu_jammy"
 
@@ -59,7 +59,7 @@ resource "scaleway_instance_volume" "server_volume" {
   count      = length(var.regions)
   zone       = var.regions[count.index]
   type       = "b_ssd"
-  name       = "blonks-test-${count.index}"
+  name       = "blonks-test-bridge-${count.index}"
   size_in_gb = 800
 }
 
