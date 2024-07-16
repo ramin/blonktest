@@ -1,0 +1,27 @@
+#cloud-config
+package_update: true
+packages:
+  - golang
+  - git
+write_files:
+  - path: /mnt/data/celestia/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/celestia light start --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-light
+
+runcmd:
+  - mkfs.ext4 /dev/vdb
+  - mkdir -p /mnt/data
+  - mount /dev/vdb /mnt/data
+  - apt-get update
+  - apt-get install -y wget
+  - export HOME=/root
+  - mkdir -p /mnt/data/celestia/celestia-node
+  - wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz
+  - tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data/celestia/celestia-node
+  - export CELESTIA_CUSTOM=${celestia_custom}
+
+  - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia light init --node.store /mnt/data/celestia-light > /mnt/data/celestia/init.txt
+  - tmux new-session -d -s light 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia light start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} --node.store /mnt/data/celestia-light'
+  - chmod +x /mnt/data/celestia/start.sh
