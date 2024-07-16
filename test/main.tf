@@ -45,6 +45,10 @@ resource "scaleway_instance_server" "servers" {
 
     cloud-init = file("${path.module}/cloud-init.yml")
   }
+
+  lifecycle {
+    ignore_changes = [user_data]
+  }
 }
 
 resource "scaleway_instance_volume" "server_volume" {
