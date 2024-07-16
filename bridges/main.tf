@@ -35,7 +35,7 @@ resource "scaleway_instance_server" "servers" {
     delete_on_termination = false
   }
 
-  additional_volume_ids = [scaleway_instance_volume.server_volume.id]
+  additional_volume_ids = [scaleway_instance_volume.server_volume[count.index].id]
 
   ip_id = scaleway_instance_ip.ip[count.index].id
 
@@ -60,7 +60,7 @@ resource "scaleway_instance_volume" "server_volume" {
   zone       = var.regions[count.index]
   type       = "b_ssd"
   name       = "blonks-test-bridge-${count.index}"
-  size_in_gb = 800
+  size_in_gb = 1800
 }
 
 resource "scaleway_instance_security_group" "bridges" {
