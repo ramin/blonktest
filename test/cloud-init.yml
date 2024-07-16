@@ -3,6 +3,13 @@ package_update: true
 packages:
   - golang
   - git
+write_files:
+  - path: /mnt/data/celestia/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/celestia bridge start --core.ip ${core_ip} --node.store /mnt/data/celestia-bridge
+
 runcmd:
   - mkfs.ext4 /dev/vdb
   - mkdir -p /mnt/data
@@ -14,7 +21,8 @@ runcmd:
   - wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz
   - tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data/celestia/celestia-node
   - export CELESTIA_CUSTOM=${celestia_custom}
-  # - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
-  # - tmux new-session -d -s bridge 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge start --node.store /mnt/data/celestia-bridge'
-  - /mnt/data/celestia/celestia-node/celestia light init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
-  - tmux new-session -d -s bridge '/mnt/data/celestia/celestia-node/celestia light start --node.store /mnt/data/celestia-bridge'
+
+  ## bridge
+  - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
+  - tmux new-session -d -s bridge 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge start --core.ip ${core_ip} --node.store /mnt/data/celestia-bridge'
+  - chmod +x /mnt/data/celestia/start.sh

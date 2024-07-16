@@ -36,3 +36,8 @@ variable "core_ip" {
   type        = string
   description = "the celestia p2p.network to connect to"
 }
+
+variable "metrics_endpoint" {
+  type        = string
+  description = "the metrics endpoint to use"
+}

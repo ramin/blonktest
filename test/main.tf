@@ -40,10 +40,12 @@ resource "scaleway_instance_server" "servers" {
   tags = ["node", "ramin&rene", "blonks"]
 
   user_data = {
-    celestia_network = var.celestia_network
-    core_ip          = var.core_ip
 
-    cloud-init = file("${path.module}/cloud-init.yml")
+    cloud-init = templatefile("${path.module}/cloud-init.yml", {
+      celestia_custom  = var.celestia_network
+      core_ip          = var.core_ip
+      metrics_endpoint = var.metrics_endpoint
+    })
   }
 
   lifecycle {
