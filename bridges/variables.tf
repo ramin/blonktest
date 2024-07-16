@@ -16,7 +16,7 @@ variable "regions" {
   default = [
     "fr-par-2",
     "nl-ams-3",
-    "pl-waw-1",
+    "pl-waw-3",
   ]
 }
 
