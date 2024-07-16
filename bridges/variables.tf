@@ -7,16 +7,16 @@ variable "scaleway_organization_id" {}
 variable "scaleway_project_id" {}
 
 variable "default_region" {
-  default = "fr-par"
+  default = "nl-ams-3"
 }
 
 // add a new region for each bridge we want to launch
 variable "regions" {
   type = list(string)
   default = [
-    "fr-par",
-    "nl-ams",
-    "pl-waw",
+    "fr-par-2",
+    "nl-ams-3",
+    "pl-waw-1",
   ]
 }
 
@@ -35,4 +35,9 @@ variable "celestia_network" {
 variable "core_ip" {
   type        = string
   description = "the celestia p2p.network to connect to"
+}
+
+variable "metrics_endpoint" {
+  type        = string
+  description = "the metrics endpoint to use"
 }

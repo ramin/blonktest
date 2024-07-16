@@ -13,48 +13,54 @@ provider "scaleway" {
   project_id      = var.scaleway_project_id
 }
 
+resource "scaleway_instance_ip" "ip" {
+  count = length(var.regions)
+  zone  = var.regions[count.index]
+}
+
 resource "scaleway_instance_server" "servers" {
   count = length(var.regions)
+  zone  = var.regions[count.index]
 
-  name  = "blonks-bridge-test-${count.index}"
+  depends_on = [
+    scaleway_instance_volume.server_volume,
+    scaleway_instance_security_group.bridges
+  ]
+
+  name  = "blonks-test-${count.index}"
   type  = "PRO2-M"
   image = "ubuntu_jammy"
 
-  security_group_id = scaleway_instance_security_group.bridges.id
-
   root_volume {
-    size_in_gb = 50
+    delete_on_termination = false
   }
+
+  additional_volume_ids = [scaleway_instance_volume.server_volume.id]
+
+  ip_id = scaleway_instance_ip.ip[count.index].id
 
   tags = ["node", "ramin&rene", "blonks"]
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo mkfs.ext4 /dev/vdb",
-      "sudo mkdir -p /mnt/data",
-      "sudo mount /dev/vdb /mnt/data",
-      "sudo apt-get update",
-      "sudo apt-get install -y golang git",
-      "sudo mkdir -p /mnt/data/celestia",
-      "sudo wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz",
-      "sudo tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data",
-      "sudo /mnt/data/celestia-node bridge init --node-store /mnt/data/celestia-bridge",
-    ]
+  user_data = {
 
-    connection {
-      type = "ssh"
-      user = "root"
-      host = self.public_ip
-    }
+    cloud-init = templatefile("${path.module}/../templates/cloud-init/bridge.yml", {
+      celestia_custom  = var.celestia_network
+      core_ip          = var.core_ip
+      metrics_endpoint = var.metrics_endpoint
+    })
+  }
+
+  lifecycle {
+    ignore_changes = [user_data]
   }
 }
 
 resource "scaleway_instance_volume" "server_volume" {
   count      = length(var.regions)
-  type       = "l_ssd"
-  name       = "blonks-bridge-test-${count.index}"
-  size_in_gb = 8000
-  region     = var.regions[count.index]
+  zone       = var.regions[count.index]
+  type       = "b_ssd"
+  name       = "blonks-test-${count.index}"
+  size_in_gb = 800
 }
 
 resource "scaleway_instance_security_group" "bridges" {
