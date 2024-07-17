@@ -1,0 +1,22 @@
+#cloud-config
+package_update: true
+packages:
+  - golang
+  - git
+write_files:
+  - path: /mnt/data/celestia/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/celestia bridge start --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-bridge
+
+runcmd:
+  - mkfs.ext4 /dev/vdb
+  - mkdir -p /mnt/data
+  - mount /dev/vdb /mnt/data
+  - apt-get update
+  - apt-get install -y wget
+  - export HOME=/root
+  - mkdir -p /mnt/data/celestia/celestia-node
+  - wget https://github.com/celestiaorg/celestia-app/releases/download/v1.12.0/celestia-app_Darwin_x86_64.tar.gz -O /mnt/data/celestia/celestia-app.tar.gz
+  - tar -xzf /mnt/data/celestia/celestia-app.tar.gz -C /mnt/data/celestia/celestia-app
