@@ -3,12 +3,6 @@ package_update: true
 packages:
   - golang
   - git
-write_files:
-  - path: /mnt/data/celestia/start.sh
-    permissions: '0755'
-    content: |
-      #!/bin/bash
-      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start  --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-${node_type} ${additional_flags}
 
 runcmd:
   - echo "Detecting and formatting the correct volume"
@@ -39,3 +33,10 @@ runcmd:
   - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia light init --node.store /mnt/data/celestia-light > /mnt/data/celestia/init.txt
   - tmux new-session -d -s light 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} ${additional_flags} --node.store /mnt/data/celestia-${node_type}'
   - chmod +x /mnt/data/celestia/start.sh
+
+write_files:
+  - path: /mnt/data/celestia/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start  --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-${node_type} ${additional_flags}

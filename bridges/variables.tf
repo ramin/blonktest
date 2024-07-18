@@ -17,6 +17,7 @@ variable "regions" {
     "fr-par-2",
     "nl-ams-3",
     "pl-waw-3",
+    "pl-waw-3",
   ]
 }
 
