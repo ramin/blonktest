@@ -13,3 +13,5 @@ provider "scaleway" {
   project_id      = var.scaleway_project_id
   region          = var.default_region
 }
+
+# This was built by hand originally
