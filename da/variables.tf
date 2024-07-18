@@ -20,10 +20,14 @@ variable "regions" {
   ]
 }
 
-variable "volume_size" {
-  type        = number
-  default     = 8000
-  description = "the size of the bridge's volume in GB"
+variable "instance_sizes" {
+  type = map(string)
+  default = {
+    full   = "PRO2-L"
+    pruned = "PRO2-M"
+    light  = "DEV1-S"
+  }
+  description = "Map of instance sizes for different node types"
 }
 
 variable "celestia_network" {
@@ -42,13 +46,24 @@ variable "metrics_endpoint" {
   description = "the metrics endpoint to use"
 }
 
-variable "binary_release" {
+variable "volume_size" {
+  type        = number
+  default     = 1800
+  description = "the size of the bridge's volume in GB"
+}
+
+variable "fast_binary_url" {
   type        = string
-  description = "the release of the celestia binary to use"
+  description = "remote location to define custom binary"
+}
+
+variable "fast_binary_name" {
+  type        = string
+  description = "name-to-save-fast-binary-as"
 }
 
 variable "run_binary" {
   type        = string
   default     = "celestia"
-  description = "name of the binary to run (defaults to celestia but can use another if custom is on system)"
+  description = "name of the binary to run"
 }

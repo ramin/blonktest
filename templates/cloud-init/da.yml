@@ -1,0 +1,41 @@
+#cloud-config
+package_update: true
+packages:
+  - golang
+  - git
+write_files:
+  - path: /mnt/data/celestia/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start  --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-${node_type} ${additional_flags}
+
+runcmd:
+  - echo "Detecting and formatting the correct volume"
+  - |
+    volume_size_mb=$(( ${volume_size} * 1024 * 1024 * 1024 ))
+    correct_device=$(lsblk -b -o NAME,SIZE -d | awk -v size=$volume_size_mb '$2 == size {print $1}' | head -n 1)
+    if [ -n "$correct_device" ]; then
+      mkfs.ext4 /dev/$correct_device
+      mkdir -p /mnt/data
+      mount /dev/$correct_device /mnt/data
+    else
+      echo "No volume of the expected size ${volume_size}G found."
+      exit 1
+    fi
+  - apt-get update
+  - apt-get install -y wget
+  - export HOME=/root
+  - mkdir -p /mnt/data/celestia/celestia-node
+  - wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz
+  - tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data/celestia/celestia-node
+  - export CELESTIA_CUSTOM=${celestia_custom}
+
+  # download fast sync binary for bonkers town
+  - wget -O /mnt/data/celestia/celestia-node/${fast_binary_name} ${fast_binary_url}
+  - chmod +x /mnt/data/celestia/celestia-node/${fast_binary_name}
+
+  # run da ting
+  - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia light init --node.store /mnt/data/celestia-light > /mnt/data/celestia/init.txt
+  - tmux new-session -d -s light 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} ${additional_flags} --node.store /mnt/data/celestia-${node_type}'
+  - chmod +x /mnt/data/celestia/start.sh

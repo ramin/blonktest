@@ -27,7 +27,7 @@ runcmd:
   - apt-get install -y wget
   - export HOME=/root
   - mkdir -p /mnt/data/celestia/celestia-node
-  - wget https://github.com/celestiaorg/celestia-node/releases/download/v0.14.0/celestia-node_Linux_x86_64.tar.gz -O /mnt/data/celestia/celestia-node.tar.gz
+  - wget ${binary_url} -O /mnt/data/celestia/celestia-node.tar.gz
   - tar -xzf /mnt/data/celestia/celestia-node.tar.gz -C /mnt/data/celestia/celestia-node
   - wget -O /mnt/data/celestia/celestia-node/${fast_binary_name} ${fast_binary_url}
   - chmod +x /mnt/data/celestia/celestia-node/${fast_binary_name}

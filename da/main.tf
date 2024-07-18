@@ -48,9 +48,6 @@ resource "scaleway_instance_server" "servers" {
       core_ip          = var.core_ip
       metrics_endpoint = var.metrics_endpoint
       volume_size      = var.volume_size
-
-      run_binary       = var.fast_binary_name
-      binary_url       = var.binary_url
       fast_binary_url  = var.fast_binary_url
       fast_binary_name = var.fast_binary_name
     })

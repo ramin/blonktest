@@ -51,3 +51,8 @@ variable "fast_binary_name" {
   type        = string
   description = "name-to-save-fast-binary-as"
 }
+
+variable "binary_url" {
+  type        = string
+  description = "the release url to fetch the celestia binary to use"
+}

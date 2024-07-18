@@ -44,9 +44,11 @@ resource "scaleway_instance_server" "servers" {
   user_data = {
 
     cloud-init = templatefile("${path.module}/../templates/cloud-init/consensus.yml", {
-      celestia_custom  = var.celestia_network
-      core_ip          = var.core_ip
-      metrics_endpoint = var.metrics_endpoint
+      celestia_custom = var.celestia_network
+      core_ip         = var.core_ip
+
+      # the download binary
+      binary_release = var.binary_release
     })
   }
 
