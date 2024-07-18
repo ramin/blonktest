@@ -11,9 +11,18 @@ write_files:
       CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/celestia bridge start --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-bridge
 
 runcmd:
-  - mkfs.ext4 /dev/vdb
-  - mkdir -p /mnt/data
-  - mount /dev/vdb /mnt/data
+  - echo "Detecting and formatting the correct volume"
+  - |
+    volume_size_mb=$(( ${volume_size} * 1024 * 1024 * 1024 ))
+    correct_device=$(lsblk -b -o NAME,SIZE -d | awk -v size=$volume_size_mb '$2 == size {print $1}' | head -n 1)
+    if [ -n "$correct_device" ]; then
+      mkfs.ext4 /dev/$correct_device
+      mkdir -p /mnt/data
+      mount /dev/$correct_device /mnt/data
+    else
+      echo "No volume of the expected size ${volume_size}G found."
+      exit 1
+    fi
   - apt-get update
   - apt-get install -y wget
   - export HOME=/root

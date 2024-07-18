@@ -47,6 +47,9 @@ resource "scaleway_instance_server" "servers" {
       celestia_custom  = var.celestia_network
       core_ip          = var.core_ip
       metrics_endpoint = var.metrics_endpoint
+      volume_size      = var.volume_size
+      fast_binary_url  = var.fast_binary_url
+      fast_binary_name = var.fast_binary_name
     })
   }
 
@@ -60,7 +63,7 @@ resource "scaleway_instance_volume" "server_volume" {
   zone       = var.regions[count.index]
   type       = "b_ssd"
   name       = "blonks-test-bridge-${count.index}"
-  size_in_gb = 1800
+  size_in_gb = var.volume_size
 }
 
 resource "scaleway_instance_security_group" "bridges" {

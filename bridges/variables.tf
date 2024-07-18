@@ -20,12 +20,6 @@ variable "regions" {
   ]
 }
 
-variable "volume_size" {
-  type        = number
-  default     = 8000
-  description = "the size of the bridge's volume in GB"
-}
-
 variable "celestia_network" {
   type        = string
   default     = "mocha"
@@ -40,4 +34,20 @@ variable "core_ip" {
 variable "metrics_endpoint" {
   type        = string
   description = "the metrics endpoint to use"
+}
+
+variable "volume_size" {
+  type        = number
+  default     = 1800
+  description = "the size of the bridge's volume in GB"
+}
+
+variable "fast_binary_url" {
+  type        = string
+  description = "remote location to define custom binary"
+}
+
+variable "fast_binary_name" {
+  type        = string
+  description = "name-to-save-fast-binary-as"
 }
