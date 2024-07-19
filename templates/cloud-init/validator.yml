@@ -1,0 +1,36 @@
+#cloud-config
+package_update: true
+packages:
+  - golang
+  - git
+runcmd:
+  - echo "Detecting and formatting the correct volume"
+  - |
+    volume_size_mb=$(( ${volume_size} * 1000 * 1000 * 1000 ))
+    correct_device=$(lsblk -b -o NAME,SIZE -d | awk -v size=$volume_size_mb '$2 == size {print $1}' | head -n 1)
+    if [ -n "$correct_device" ]; then
+      mkfs.ext4 /dev/$correct_device
+      mkdir -p /mnt/data
+      mount /dev/$correct_device /mnt/data
+    else
+      echo "No volume of the expected size ${volume_size}G found."
+      exit 1
+    fi
+  - apt-get update
+  - apt-get install -y wget
+  - export HOME=/root
+  - export APP_HOME=/mnt/data/celestia/validator-data
+  - mkdir -p /mnt/data/celestia/celestia-app
+  - wget ${binary_release} -O /mnt/data/celestia/celestia-app.tar.gz
+  - tar -xzf /mnt/data/celestia/celestia-app.tar.gz -C /mnt/data/celestia/celestia-app
+  - /mnt/data/celestia/celestia-app/celestia-appd init ${validator_name} --chain-id ${chain_id} --home $APP_HOME
+  - /mnt/data/celestia/celestia-app/celestia-appd keys add ${key_name} --keyring-backend ${keyring_backend} > /mnt/data/celestia/validator-data/key.txt
+  - /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${total_tia_amount} --keyring-backend ${keyring_backend}
+  - /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${staking_tia_amount} --keyring-backend ${keyring_backend}
+  - export IP_ADDRESS=127.0.0.1
+  - export NODE_ID=$(/mnt/data/celestia/celestia-app/celestia-appd tendermint show-node-id)
+  - export PORT_NUMBER=26656
+  - export PEER="$NODE_ID@$IP_ADDRESS:$PORT_NUMBER"
+  - echo $PEER > /mnt/data/peer.txt
+
+  # update config with trusted peer and start the guy

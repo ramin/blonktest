@@ -3,6 +3,13 @@ package_update: true
 packages:
   - golang
   - git
+write_files:
+  - path: /tmp/start.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/${fast_binary_name} bridge start --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-bridge
+
 runcmd:
   - echo "Detecting and formatting the correct volume"
   - |
@@ -29,11 +36,5 @@ runcmd:
   ## bridge
   - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia bridge init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
   - tmux new-session -d -s bridge 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${fast_binary_name} bridge start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} --node.store /mnt/data/celestia-bridge'
+  - mv /tmp/start.sh /mnt/data/celestia/start.sh
   - chmod +x /mnt/data/celestia/start.sh
-
-write_files:
-  - path: /mnt/data/celestia/start.sh
-    permissions: '0755'
-    content: |
-      #!/bin/bash
-      CELESTIA_CUSTOM='${celestia_custom}' /mnt/data/celestia/celestia-node/${fast_binary_name} bridge start --core.ip ${core_ip} --metrics --metrics.endpoint ${metrics_endpoint} --node.store /mnt/data/celestia-bridge

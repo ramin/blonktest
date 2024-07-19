@@ -11,7 +11,7 @@ variable "default_region" {
 }
 
 variable "light_nodes" {
-  type = map(number)
+  type = list(string)
   default = {
     "fr-par-2" = 1
     "nl-ams-3" = 1
@@ -20,30 +20,30 @@ variable "light_nodes" {
 }
 
 variable "full_nodes" {
-  type = map(number)
-  default = {
-    "fr-par-2" = 1
-    "nl-ams-3" = 1
-    "pl-waw-3" = 1
-  }
+  type = list(string)
+  default = [
+    "fr-par-2",
+    # "nl-ams-3",
+    # "pl-waw-3"
+  ]
 }
 
 variable "pruned_full_nodes" {
-  type = map(number)
-  default = {
-    "fr-par-2" = 1
-    "nl-ams-3" = 1
-    "pl-waw-3" = 1
-  }
+  type = list(string)
+  default = [
+    "fr-par-2",
+    "nl-ams-3",
+    "pl-waw-3",
+  ]
 }
 
 variable "pruned_light_nodes" {
-  type = map(number)
-  default = {
-    "fr-par-2" = 1
-    "nl-ams-3" = 1
-    "pl-waw-3" = 1
-  }
+  type = list(string)
+  default = [
+    "fr-par-2",
+    "nl-ams-3",
+    "pl-waw-3",
+  ]
 }
 
 // add a new region for each bridge we want to launch
