@@ -3,6 +3,17 @@ package_update: true
 packages:
   - golang
   - git
+  - emacs
+write_files:
+  - path: /tmp/setup.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      /mnt/data/celestia/celestia-app/celestia-appd init ${validator_name} --chain-id ${chain_id} --home $APP_HOME
+      /mnt/data/celestia/celestia-app/celestia-appd keys add ${key_name} --keyring-backend ${keyring_backend} --home $APP_HOME > /mnt/data/celestia/validator-data/key.txt
+      /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${total_tia_amount} --keyring-backend ${keyring_backend} --home $APP_HOME
+      /mnt/data/celestia/celestia-app/celestia-appd gentx ${key_name} ${staking_tia_amount} --keyring-backend ${keyring_backend} --home $APP_HOME
+      /mnt/data/celestia/celestia-app/celestia-appd collect-gentxs --home $APP_HOME
 runcmd:
   - echo "Detecting and formatting the correct volume"
   - |
@@ -24,13 +35,16 @@ runcmd:
   - wget ${binary_release} -O /mnt/data/celestia/celestia-app.tar.gz
   - tar -xzf /mnt/data/celestia/celestia-app.tar.gz -C /mnt/data/celestia/celestia-app
   - /mnt/data/celestia/celestia-app/celestia-appd init ${validator_name} --chain-id ${chain_id} --home $APP_HOME
-  - /mnt/data/celestia/celestia-app/celestia-appd keys add ${key_name} --keyring-backend ${keyring_backend} > /mnt/data/celestia/validator-data/key.txt
-  - /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${total_tia_amount} --keyring-backend ${keyring_backend}
-  - /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${staking_tia_amount} --keyring-backend ${keyring_backend}
+  - /mnt/data/celestia/celestia-app/celestia-appd keys add ${key_name} --keyring-backend ${keyring_backend} > /mnt/data/celestia/validator-data/key.txt --home $APP_HOME
+  - /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${total_tia_amount} --keyring-backend ${keyring_backend} --home $APP_HOME
+  - /mnt/data/celestia/celestia-app/celestia-appd gentx ${key_name} ${staking_tia_amount} --keyring-backend ${keyring_backend} --home $APP_HOME
+  - /mnt/data/celestia/celestia-app/celestia-appd collect-gentxs --home $APP_HOME
   - export IP_ADDRESS=127.0.0.1
-  - export NODE_ID=$(/mnt/data/celestia/celestia-app/celestia-appd tendermint show-node-id)
+  - export NODE_ID=$(/mnt/data/celestia/celestia-app/celestia-appd tendermint show-node-id --home $APP_HOME)
   - export PORT_NUMBER=26656
   - export PEER="$NODE_ID@$IP_ADDRESS:$PORT_NUMBER"
   - echo $PEER > /mnt/data/peer.txt
+  - mv /tmp/setup.sh /mnt/data/celestia/setup.sh
 
   # update config with trusted peer and start the guy
+  # txsim setup
