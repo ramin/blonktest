@@ -14,6 +14,10 @@ write_files:
       /mnt/data/celestia/celestia-app/celestia-appd add-genesis-account ${key_name} ${total_tia_amount} --keyring-backend ${keyring_backend} --home $APP_HOME
       /mnt/data/celestia/celestia-app/celestia-appd gentx ${key_name} ${staking_tia_amount} --keyring-backend ${keyring_backend} --home $APP_HOME
       /mnt/data/celestia/celestia-app/celestia-appd collect-gentxs --home $APP_HOME
+      # /mnt/data/celestia/celestia-app/celestia-appd start --home $APP_HOME
+
+      # ./build/txsim --key-path $APP_HOME --master validator --seed 1234 --poll-time 0.1s --blob 10 —blob-amounts 10  --grpc-endpoint 127.0.0.1:9090
+
 runcmd:
   - echo "Detecting and formatting the correct volume"
   - |
