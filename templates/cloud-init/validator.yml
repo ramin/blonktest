@@ -16,8 +16,16 @@ write_files:
       /mnt/data/celestia/celestia-app/celestia-appd collect-gentxs --home $APP_HOME
       # /mnt/data/celestia/celestia-app/celestia-appd start --home $APP_HOME
 
-      # ./build/txsim --key-path $APP_HOME --master validator --seed 1234 --poll-time 0.1s --blob 10 —blob-amounts 10  --grpc-endpoint 127.0.0.1:9090
 
+      # txsim
+      # run 160 100kb transactions
+      # /mnt/data/celestia/txsim --key-path /mnt/data/celestia/validator-data/ --master validator --seed 1234 --poll-time 0.4s --blob 160 --grpc-endpoints 127.0.0.1:9090 --rpc-endpoints http://localhost:26657 --blob-sizes 100000-100001 --feegrant
+
+      # remember
+      # enable
+      # - grpc enable=true (app.toml)
+      # - transaction indexing (client.toml)
+      # status: curl -s http://localhost:26657/status | jq .
 runcmd:
   - echo "Detecting and formatting the correct volume"
   - |
