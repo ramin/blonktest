@@ -15,7 +15,7 @@ variable "regions" {
   type = list(string)
   default = [
     "nl-ams-3",
-    # "fr-par-2",
+    "fr-par-2",
     # "pl-waw-3",
   ]
 }
