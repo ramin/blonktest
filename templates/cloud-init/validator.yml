@@ -25,6 +25,7 @@ write_files:
       # enable
       # - grpc enable=true (app.toml)
       # - transaction indexing (client.toml)
+      # - set minimum-gas-price to 0utia
       # status: curl -s http://localhost:26657/status | jq .
 runcmd:
   - echo "Detecting and formatting the correct volume"

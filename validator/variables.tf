@@ -66,13 +66,13 @@ variable "chain_id" {
 
 variable "total_tia_amount" {
   type        = string
-  default     = "1500500000000utia"
+  default     = "19910500500000000utia"
   description = "the total TIA amount for the genesis account"
 }
 
 variable "staking_tia_amount" {
   type        = string
-  default     = "100500000000utia"
+  default     = "10500000000utia"
   description = "the staking TIA amount for the genesis account"
 }
 
