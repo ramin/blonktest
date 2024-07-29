@@ -17,7 +17,6 @@ variable "regions" {
     "fr-par-2",
     "nl-ams-3",
     "pl-waw-3",
-    "pl-waw-3",
   ]
 }
 
@@ -39,7 +38,7 @@ variable "metrics_endpoint" {
 
 variable "volume_size" {
   type        = number
-  default     = 1800
+  default     = 8000
   description = "the size of the bridge's volume in GB"
 }
 
