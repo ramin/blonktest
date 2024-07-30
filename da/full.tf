@@ -1,3 +1,7 @@
+locals {
+  celestia_custom = "${var.chain_id}:${var.genesis_hash}:${var.bridge_multiaddr[0]}"
+}
+
 module "da-full" {
   source      = "../modules/scaleway/instance"
   name        = "blonks-test-da-full-1"
@@ -9,7 +13,7 @@ module "da-full" {
   # provisioning
   user_data = {
     cloud-init = templatefile("${path.module}/../templates/cloud-init/da.yml", {
-      celestia_custom  = var.celestia_network
+      celestia_custom  = local.celestia_custom
       core_ip          = var.core_ip
       metrics_endpoint = var.metrics_endpoint
       volume_size      = var.volume_size

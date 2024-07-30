@@ -17,7 +17,6 @@ variable "light_nodes" {
     "nl-ams-3",
     "pl-waw-3"
   ]
-
 }
 
 variable "full_nodes" {
@@ -103,4 +102,20 @@ variable "run_binary" {
   type        = string
   default     = "celestia"
   description = "name of the binary to run"
+}
+
+variable "chain_id" {
+  type        = string
+  description = "list of chain IDs"
+}
+
+variable "genesis_hash" {
+  type        = string
+  description = "genesis hash"
+}
+
+variable "bridge_multiaddr" {
+  type        = list(string)
+  description = "list of bridge multiaddresses"
+  default     = []
 }
