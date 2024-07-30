@@ -44,6 +44,7 @@ resource "scaleway_instance_volume" "server_volume" {
   type       = "b_ssd"
   name       = var.name
   size_in_gb = var.volume_size
+  zone       = var.region
 }
 
 resource "scaleway_instance_security_group" "validator" {

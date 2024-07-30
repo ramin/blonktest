@@ -13,7 +13,7 @@ write_files:
 runcmd:
   - echo "Detecting and formatting the correct volume"
   - |
-    volume_size_mb=$(( ${volume_size} * 1024 * 1024 * 1024 ))
+    export volume_size_mb=$(( ${volume_size} * 1000 * 1000 * 1000 ))
     correct_device=$(lsblk -b -o NAME,SIZE -d | awk -v size=$volume_size_mb '$2 == size {print $1}' | head -n 1)
     if [ -n "$correct_device" ]; then
       mkfs.ext4 /dev/$correct_device

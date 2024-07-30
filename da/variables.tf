@@ -12,11 +12,12 @@ variable "default_region" {
 
 variable "light_nodes" {
   type = list(string)
-  default = {
-    "fr-par-2" = 1
-    "nl-ams-3" = 1
-    "pl-waw-3" = 1
-  }
+  default = [
+    "fr-par-2",
+    "nl-ams-3",
+    "pl-waw-3"
+  ]
+
 }
 
 variable "full_nodes" {
