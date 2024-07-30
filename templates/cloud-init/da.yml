@@ -36,7 +36,7 @@ runcmd:
   - chmod +x /mnt/data/celestia/celestia-node/${fast_binary_name}
 
   # run da ting
-  - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia light init --node.store /mnt/data/celestia-light > /mnt/data/celestia/init.txt
+  - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia ${node_type} init --node.store /mnt/data/celestia-${node_type} > /mnt/data/celestia/init.txt
   - tmux new-session -d -s light 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} ${additional_flags} --node.store /mnt/data/celestia-${node_type}'
   - mv /tmp/start.sh /mnt/data/celestia/start.sh
   - chmod +x /mnt/data/celestia/start.sh
