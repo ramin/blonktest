@@ -2,13 +2,38 @@ locals {
   celestia_custom = "${var.chain_id}:${var.genesis_hash}:${var.bridge_multiaddr[0]}"
 }
 
-module "da-full" {
+# module "da-full" {
+#   source      = "../modules/scaleway/instance"
+#   name        = "blonks-test-da-full-1"
+#   size        = "large"
+#   tags        = ["da", "blonks", "full"]
+#   region      = "nl-ams-3"
+#   volume_size = var.volume_size
+
+#   # provisioning
+#   user_data = {
+#     cloud-init = templatefile("${path.module}/../templates/cloud-init/da.yml", {
+#       celestia_custom  = local.celestia_custom
+#       core_ip          = var.core_ip
+#       metrics_endpoint = var.metrics_endpoint
+#       volume_size      = var.volume_size
+#       node_type        = "full"
+#       run_binary       = var.fast_binary_name
+#       fast_binary_name = var.fast_binary_name
+#       fast_binary_url  = var.fast_binary_url
+#       additional_flags = ""
+#     })
+#   }
+# }
+
+
+module "oleg-connection-test" {
   source      = "../modules/scaleway/instance"
-  name        = "blonks-test-da-full-1"
-  size        = "large"
+  name        = "blonks-test-oleg-connection-test"
+  size        = "small"
   tags        = ["da", "blonks", "full"]
   region      = "nl-ams-3"
-  volume_size = var.volume_size
+  volume_size = 400
 
   # provisioning
   user_data = {

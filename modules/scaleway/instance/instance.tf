@@ -1,8 +1,8 @@
 locals {
   scaleway_size = {
-    small  = "DEV1-S"
-    medium = "PRO2-M"
-    large  = "ENT1-L"
+    small  = "PLAY2-NANO"
+    medium = "ENT1-L"
+    large  = "PRO2-M"
   }
   node_type = lookup(local.scaleway_size, var.size, var.default_size)
 }
