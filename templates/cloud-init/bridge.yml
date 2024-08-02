@@ -35,6 +35,6 @@ runcmd:
 
   ## bridge
   - CELESTIA_BOOTSTRAPPER=true CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${fast_binary_name} bridge init --node.store /mnt/data/celestia-bridge > /mnt/data/celestia/init.txt
-  - tmux new-session -d -s bridge 'CELESTIA_BOOTSTRAPPER=true CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${fast_binary_name} bridge start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} --rpc.addr --node.store /mnt/data/celestia-bridge'
+  - tmux new-session -d -s bridge 'CELESTIA_BOOTSTRAPPER=true CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${fast_binary_name} bridge start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} --node.store /mnt/data/celestia-bridge'
   - mv /tmp/start.sh /mnt/data/celestia/start.sh
   - chmod +x /mnt/data/celestia/start.sh
