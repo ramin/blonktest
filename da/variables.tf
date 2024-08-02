@@ -84,7 +84,7 @@ variable "metrics_endpoint" {
 
 variable "volume_size" {
   type        = number
-  default     = 1800
+  default     = 6000
   description = "the size of the bridge's volume in GB"
 }
 
