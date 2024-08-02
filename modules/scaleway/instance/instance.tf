@@ -2,9 +2,11 @@ locals {
   scaleway_size = {
     small  = "PLAY2-NANO"
     medium = "ENT1-L"
+    normal = "PRO2-S"
     large  = "PRO2-M"
   }
-  node_type = lookup(local.scaleway_size, var.size, var.default_size)
+
+  node_type = var.instance_type != "" ? var.instance_type : lookup(local.scaleway_size, var.size, var.default_size)
 }
 
 resource "scaleway_instance_ip" "ip" {

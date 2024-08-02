@@ -14,6 +14,12 @@ variable "size" {
   }
 }
 
+variable "instance_type" {
+  type        = string
+  description = "The type of the instance"
+  default     = ""
+}
+
 variable "default_size" {
   type        = string
   description = "The default size of the node"

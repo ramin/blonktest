@@ -13,14 +13,14 @@ write_files:
 runcmd:
   - echo "Detecting and formatting the correct volume"
   - |
-    export volume_size_mb=$(( ${volume_size} * 1000 * 1000 * 1000 ))
-    correct_device=$(lsblk -b -o NAME,SIZE -d | awk -v size=$volume_size_mb '$2 == size {print $1}' | head -n 1)
+    export volume_size_bytes=$(( ${volume_size} * 1000 * 1000 * 1000 ))
+    correct_device=$(lsblk -b -o NAME,SIZE -d | awk -v size=$volume_size_bytes '$2 >= size - 1000000000 && $2 <= size + 1000000000 {print $1}' | head -n 1)
     if [ -n "$correct_device" ]; then
       mkfs.ext4 /dev/$correct_device
       mkdir -p /mnt/data
       mount /dev/$correct_device /mnt/data
     else
-      echo "No volume of the expected size ${volume_size}G found."
+      echo "No volume of the expected size approximately ${volume_size}G found."
       exit 1
     fi
   - apt-get update
@@ -37,6 +37,6 @@ runcmd:
 
   # run da ting
   - CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/celestia ${node_type} init --node.store /mnt/data/celestia-${node_type} > /mnt/data/celestia/init.txt
-  - tmux new-session -d -s node 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} ${additional_flags} --node.store /mnt/data/celestia-${node_type}'
+  - tmux new-session -d -s node 'CELESTIA_CUSTOM=${celestia_custom} /mnt/data/celestia/celestia-node/${run_binary} ${node_type} start --metrics --metrics.endpoint ${metrics_endpoint} --core.ip ${core_ip} ${additional_flags} --node.store /mnt/data/celestia-${node_type} ${additional_flags}'
   - mv /tmp/start.sh /mnt/data/celestia/start.sh
   - chmod +x /mnt/data/celestia/start.sh

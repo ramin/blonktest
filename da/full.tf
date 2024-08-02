@@ -31,10 +31,10 @@ module "da-full-group" {
   count  = length(var.regions)
   region = var.regions[count.index]
 
-  source = "../modules/scaleway/instance"
-  name   = "blonks-test-da-full-${var.regions[count.index]}-${count.index + 1}"
-  size   = "large"
-  tags   = ["da", "blonks", "full"]
+  source        = "../modules/scaleway/instance"
+  name          = "blonks-test-da-full-${var.regions[count.index]}-${count.index + 1}"
+  instance_type = "PRO2-M"
+  tags          = ["da", "blonks", "full"]
 
   volume_size = var.volume_size
 
