@@ -15,7 +15,17 @@ variable "light_nodes" {
   default = [
     "nl-ams-3",
     "fr-par-1",
-    "pl-waw-2"
+    "pl-waw-2",
+  ]
+}
+
+variable "pruning_light_nodes" {
+  type = list(string)
+  default = [
+    "nl-ams-3",
+    "fr-par-1",
+    "pl-waw-2",
+    "fr-par-2",
   ]
 }
 
@@ -34,6 +44,8 @@ variable "pruned_full_nodes" {
     "fr-par-2",
     "nl-ams-3",
     "pl-waw-3",
+    "pl-waw-2",
+    "nl-ams-2",
   ]
 }
 
